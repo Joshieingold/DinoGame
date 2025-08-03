@@ -2,7 +2,7 @@ import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
-        JFrame frame = new JFrame("DinosaurGame");
+        JFrame frame = new JFrame("Dinosaur Game");
         GamePanel panel = new GamePanel();
         frame.add(panel);
         frame.setSize(400, 400);

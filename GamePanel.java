@@ -7,6 +7,7 @@ import java.util.Iterator;
 public class GamePanel extends JPanel implements ActionListener, KeyListener {
     private Player player;
     private ArrayList<Obstacle> obstacles;
+    private ArrayList<Comet> comets;
     private int score = 0;
     private boolean gameover = false;
     private int obstacleTimer = 0;
@@ -19,6 +20,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
         player = new Player();
         obstacles = new ArrayList<>();
+        comets = new ArrayList<>();
     }
 
     @Override
@@ -29,6 +31,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
         for (Obstacle obs : obstacles) {
             obs.draw(g);
+        }
+        for (Comet com : comets) {
+            com.draw(g);
         }
 
 
@@ -54,9 +59,16 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         obstacleTimer++;
         if (obstacleTimer > 100) {
             obstacles.add(new Obstacle(350, 300, 30, 50));
+            comets.add(new Comet(350, 10, 100, 100));
             obstacleTimer = 0;
         }
 
+        Iterator<Comet> that = comets.iterator();
+        while (that.hasNext()) {
+            Comet com = that.next();
+            com.move();
+            if (com.x + com.width < 0) that.remove();
+        }
         Iterator<Obstacle> it = obstacles.iterator();
         while (it.hasNext()) {
             Obstacle obs = it.next();
@@ -69,6 +81,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
             if (playerBounds.intersects(obs.getBounds())) {
                 System.out.println("Hit!");
                 gameover = true;
+            }
+        }
+        for (Comet com : comets) {
+            if (playerBounds.intersects(com.getBounds())) {
+                gameover = true;
+                System.out.println("Hit!");
             }
         }
         if (!gameover) {
